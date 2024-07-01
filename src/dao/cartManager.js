@@ -17,7 +17,7 @@ class CartManager {
       const carts = await fs.promises.readFile(this.#path, "utf-8");
       return JSON.parse(carts);
     } catch (e) {
-      return [];
+      throw new Error(` No se encuentraron carritos.`);;
     }
   }
 
