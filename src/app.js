@@ -52,7 +52,6 @@ let manager= new ProductManager()
   socket.on("nuevo-producto", async (producto) => {
     try {
       await manager.addProducts(producto);
-      //despues de agregar un producto, obtener la lista actualizada antes de emitirla a todos los clientes:
       const updatedProductsList = await manager.getProducts();
       socketServer.emit("realtime", updatedProductsList);
     } catch (error) {
@@ -63,7 +62,6 @@ let manager= new ProductManager()
   socket.on("eliminar-producto", async (productId) => {
     try {
       await manager.deleteProduct(productId);
-      //despues de eliminar un producto, obtener la lista actualizada antes de emitirla a todos los clientes:
       const updatedProductsList = await manager.getProducts();
       socketServer.emit("realtime", updatedProductsList);
     } catch (error) {
