@@ -4,17 +4,19 @@ import handlebars from "express-handlebars";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.routes.js";
 import viewsRouter from "./routes/views.routes.js";
-import ProductManager from "./dao/productManager.js";
+import ProductManager from "./dao/files-managers/productManager.js";
 import {__dirname}from "./utils.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
+import mongoose from "mongoose";
 
 
 const app = express();
 
 app.use(urlencoded({ extended: true }));
 app.engine("handlebars", handlebars.engine());
-app.use(express.static(__dirname + "/../public"));
+//app.use(express.static(__dirname + "/../public"));
+app.use(express.static(__dirname + "/public"));
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
@@ -24,10 +26,10 @@ const httpServer = app.listen(8080, () => {
   console.log("Server listening on port 8080");
 });
 
-
-app.set("views", __dirname + "/views");
-app.set("view engine", "handlebars");
-app.use(express.static(__dirname + "/public"));
+mongoose.connect('mongodb+srv://cobosleandra2:171294@cluster0.ydfb7m6.mongodb.net/?retryWrites=true'
+).then((conn) => { console.log("Connected to MongoDB!!");   });
+    
+    
 
 
 app.use("/api/products", productsRouter);
@@ -35,7 +37,7 @@ app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
 
 
-
+ /*
 //socket
 export const socketServer = new Server(httpServer);
 socketServer.on("connection", async (socket) => {
@@ -68,4 +70,4 @@ let manager= new ProductManager()
       console.error("Error al eliminar el producto", error);
     }
   });
-});
+});*/

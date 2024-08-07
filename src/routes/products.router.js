@@ -1,10 +1,34 @@
 import { Router} from "express";
 import { urlencoded } from "express";
 import { __dirname } from "../utils.js";
-import ProductManager from "../dao/productManager.js";
+import ProductManager from "../dao/files-managers/productManager.js";
+import ProductManagerDB from "../dao/db-managers/products.dao.managers.js";
 
 const productsRouter = Router();
-let manager= new ProductManager( __dirname+ '/dao/files/products.json');
+let manager= new ProductManagerDB()
+
+productsRouter.get('/', async (req,res)=>{
+    let products= await manager.getProducts()
+    const {limit}= req.query
+    if (limit){
+        products.length= limit
+        res.render('home',{products})
+    } else{
+        res.render('home',{products})}
+    
+})
+
+productsRouter.get('/search/:title', async (req,res)=>{
+    const title= req.params.title
+    let products= await manager.getProductsByQueryTitle(title.toLowerCase())
+        res.status(200).json(products)}
+)
+productsRouter.get('/price', async (req,res)=>{
+    let products= await manager.ordenPrice(1)
+        res.status(200).json(products)}
+)
+
+/*let manager= new ProductManager( __dirname+ '/dao/files/products.json');
 
 productsRouter.use(urlencoded({ extended: true }));
 
@@ -51,6 +75,6 @@ productsRouter.delete('/delete/:pid', async(req,res)=>{
     let deleteProduct= await manager.deleteProduct(pid)
     res.status(200).json('Producto Eliminado')
 })
-   
+   */
 
 export default productsRouter;
