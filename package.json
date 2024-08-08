@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:css": "postcss public/styles/tailwind.css"
-
   },
   "dev": "nodemon src/app.js",
   "type": "module",
@@ -16,6 +15,7 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "autoprefixer": "^10.4.20",
+    "body-parser": "^1.20.2",
     "bootstrap": "^5.3.3",
     "bulma": "^1.0.1",
     "express": "^4.19.2",

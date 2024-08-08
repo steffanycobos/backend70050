@@ -5,8 +5,13 @@ import fs from 'fs'
 class ProductManagerDB {
   constructor() {}
 
-  async getProducts() {
-  let products = await productsModel.find();
+  async getProducts(page, limit) {
+    const options = {
+      page: page|| 1, 
+      limit: limit || 10, 
+    };
+
+  let products = await productsModel.paginate({},options);
    let productos = JSON.parse(JSON.stringify(products));
     return productos;
   }
@@ -46,11 +51,7 @@ class ProductManagerDB {
   async deleteProduct(id) {
     const productDelete = await productsModel.deleteOne({ _id: id });
     return productDelete;
-  }
   
-  async deleteTODO() {
-    const productDelete = await productsModel.deleteMany({});
-    return productDelete;
   }
 
   async ordenPrice(num) {
@@ -65,9 +66,9 @@ class ProductManagerDB {
     return products;
   }
   
-  async getProductsByQueryPrice(dato) {
+  async getProductsByQueryCategory(dato) {
     const products = await productsModel.aggregate([
-      { $match: { price: dato } },
+      { $match: { category: dato } }, { $sort: { price: 1 } }
     ]);
     return products;
   }
