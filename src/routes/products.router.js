@@ -7,16 +7,17 @@ import ProductManagerDB from "../dao/db-managers/products.dao.managers.js";
 const productsRouter = Router();
 let manager= new ProductManagerDB()
 
-productsRouter.get('/', async (req,res)=>{
-    let products= await manager.getProducts()
-    const {limit}= req.query
-    if (limit){
-        products.length= limit
-        res.render('home',{products})
-    } else{
-        res.render('home',{products})}
-    
-})
+productsRouter.get('/', async (req, res) => {
+    try {
+      const products = await manager.getProducts();
+      const { limit } = req.query;
+      const limitedProducts = limit ? products.slice(0, limit) : products;
+      res.render('home', { products: limitedProducts });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error al obtener los productos');
+    }
+  });
 
 productsRouter.get('/search/:title', async (req,res)=>{
     const title= req.params.title
