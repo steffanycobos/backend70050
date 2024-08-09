@@ -1,15 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
+>
+    <title>Document</title>
 </head>
-<body>
 
-  holaaaa!
- {{#each products}}
-    <li>{{this._id}}</li>
-  {{/each}}
+<body style="background-color: rgb(249, 249, 201);" >
+    <div class="grid is-col-min-13 is-column-gap-4">
+{{#each products.docs}}
+   <div class="card is-col-min-8" style="margin-top:10px; background-color: white;">
+  <div class="card-image">
+    <figure class="image is-4by3">
+      <img
+        src="{{this.thumbnail}}"
+        alt="Placeholder image"
+      />
+    </figure>
+  </div>
+  <div class="card-content" >
+    <div class="media">
+      <div class="media-content">
+        <p class="title is-4" style="color: black; text-transform: capitalize;" >{{this.title}} </p>
+      </div>
+    </div>
+
+    <div class="content" style="color: black;">
+      <div style="color: black";>
+        <b> ${{this.price}} </b>
+      </div>
+      <a href="/api/products/{{this._id}}"> Ver mas</a>
+    </div>
+  </div>
+</div>
+{{/each}}
+</div>
+  <div>
+    {{#if products.hasPrevPage}}
+      <a href="/api/products/?page={{products.prevPage}}">Anterior</a>
+    {{/if}}
+
+    <span>Página {{products.page}} de {{products.totalPages}}</span>
+
+    {{#if products.hasNextPage}}
+      <a href="/api/products/?page={{products.nextPage}}">Siguiente</a>
+    {{/if}}
+  </div>
+
+    
 </body>
 </html>

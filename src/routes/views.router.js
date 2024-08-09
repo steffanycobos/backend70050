@@ -1,18 +1,15 @@
 import { Router } from "express";
-import ProductManager from "../dao/files-managers/productManager.js";
+import ProductManagerDB from "../dao/db-managers/products.dao.managers.js";
 
 
 const viewsRouter = Router();
-const productManager = new ProductManager();
+const productManager = new ProductManagerDB();
 
 viewsRouter.get("/", async (req, res) => {
-  res.render("home");
+  const products = await productManager.getProducts();
+  res.render("home", {products});
 });
 
-viewsRouter.get("/realtimeproducts", async (req, res) => {
-
-  res.render("real_time_products");
-});
 
 
 

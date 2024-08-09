@@ -1,5 +1,6 @@
 import express from "express";
 import { urlencoded } from "express";
+import { create } from 'express-handlebars';
 import handlebars from "express-handlebars";
 import bodyParser from "body-parser";
 import productsRouter from "./routes/products.router.js";
@@ -11,30 +12,28 @@ import { Server } from "socket.io";
 import mongoose from "mongoose";
 
 const app = express();
-app.use(express.json())
-app.use(urlencoded({ extended: true }));
-app.engine("handlebars", handlebars.engine());
-app.use(express.static(__dirname + "/public"));
-app.engine("handlebars", engine());
-app.set("view engine", "handlebars");
-app.set("views", __dirname + "/views");
+const hbs = create({}); 
+
 const httpServer = app.listen(8080, () => {
   console.log("Server listening on port 8080");
 });
+app.engine('handlebars', hbs.engine);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'handlebars');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'))
+
+
+app.use("/", viewsRouter)
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
 
 
 mongoose.connect('mongodb+srv://cobosleandra2:171294@cluster0.ydfb7m6.mongodb.net/?retryWrites=true'
 ).then((conn) => { console.log("Connected to MongoDB!!");   });
 
 
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/", viewsRouter)
-
-
-app.get('/hola', (req, res) => {
-  res.render('prueba', { title: 'Mi página de inicio' });
-});
 
 
 
