@@ -8,14 +8,15 @@ import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
 import {__dirname}from "./utils.js";
 import { engine } from "express-handlebars";
-import { Server } from "socket.io";
 import mongoose from "mongoose";
+import dotenv from 'dotenv'
 
 const app = express();
 const hbs = create({}); 
+dotenv.config()
 
-const httpServer = app.listen(8080, () => {
-  console.log("Server listening on port 8080");
+const httpServer = app.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}`);
 });
 app.engine('handlebars', hbs.engine);
 app.set('views', __dirname + '/views');
@@ -30,7 +31,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 
 
-mongoose.connect('mongodb+srv://cobosleandra2:171294@cluster0.ydfb7m6.mongodb.net/?retryWrites=true'
+mongoose.connect(process.env.DATABASE_URL
 ).then((conn) => { console.log("Connected to MongoDB!!");   });
 
 
@@ -38,37 +39,3 @@ mongoose.connect('mongodb+srv://cobosleandra2:171294@cluster0.ydfb7m6.mongodb.ne
 
 
 
- /*
-//socket
-export const socketServer = new Server(httpServer);
-socketServer.on("connection", async (socket) => {
-  console.log("Nuevo cliente conectado. Id: " + socket.id);
-let manager= new ProductManager()
-  try {
-    const productsList = await manager.getProducts();
-    socket.emit("home", productsList);
-    socket.emit("realtime", productsList);
-  } catch (error) {
-    console.error("Error al obtener la lista de productos", error);
-  }
-
-  socket.on("nuevo-producto", async (producto) => {
-    try {
-      await manager.addProducts(producto);
-      const updatedProductsList = await manager.getProducts();
-      socketServer.emit("realtime", updatedProductsList);
-    } catch (error) {
-      console.error("Error al agregar el producto", error);
-    }
-  });
-
-  socket.on("eliminar-producto", async (productId) => {
-    try {
-      await manager.deleteProduct(productId);
-      const updatedProductsList = await manager.getProducts();
-      socketServer.emit("realtime", updatedProductsList);
-    } catch (error) {
-      console.error("Error al eliminar el producto", error);
-    }
-  });
-});*/
